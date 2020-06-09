@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {Grid} from '@material-ui/core'
 import youtube from './api/youtube'
-import {SearchBar,VideoDetails} from './components'
+import {SearchBar,VideoDetails, VideoList} from './components'
 
 
 export class App extends Component {
@@ -9,9 +9,12 @@ export class App extends Component {
         super(props)
     
         this.state = {
-             video:[],
+             videos:[],
              selectedVideo:null
         }
+    }
+    onVideoSelect = (video) => {
+        this.setState({selectedVideo:video})
     }
     
     handleSubmit = async (searchItem) => {
@@ -25,18 +28,18 @@ export class App extends Component {
         })
         
         this.setState({
-            video:response.data.items,
+            videos:response.data.items,
             selectedVideo:response.data.items[0]
         })
         console.log(this.state.selectedVideo.id.videoId);
        
     }
     render() {
-        const {selectedVideo} = this.state;
+        const {selectedVideo, videos} = this.state;
         return (
-            <Grid justify="center" container spacing={16}>
+            <Grid justify="center" container spacing={10}>
                 <Grid item xs={12}>
-                    <Grid container spacing={16}>
+                    <Grid container spacing={10}>
                         <Grid item xs={12}>
                             <SearchBar onFormSubmit={this.handleSubmit} />
                         </Grid>
@@ -44,7 +47,7 @@ export class App extends Component {
                             <VideoDetails video={selectedVideo}/>
                         </Grid>
                         <Grid item xs={4}>
-                            {/* Video list */}
+                            <VideoList videos={videos} onVideoSelect={this.onVideoSelect} />
                         </Grid>
                     </Grid>
                 </Grid>
